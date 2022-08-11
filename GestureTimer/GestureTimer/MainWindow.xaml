@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GestureTimer"
         mc:Ignorable="d"
-        Title="Gesture Timer by MrMerowind" Height="500" Width="400" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight" MinWidth="400" MinHeight="500">
+        Title="Gesture Timer by MrMerowind" Height="500" Width="400" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight" MinWidth="400" MinHeight="500" Topmost="True" Icon="/icon.ico">
     <Grid>
         <Image x:Name="image" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Stretch="Uniform"/>
         <Button x:Name="selectFolderButton" Content="Select folder" HorizontalAlignment="Left" Margin="10,0,0,7" VerticalAlignment="Bottom" FontSize="20" Width="127" Click="selectFolderButton_Click" Height="31"/>
