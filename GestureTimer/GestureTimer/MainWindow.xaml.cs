@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,52 @@ using System.Windows.Shapes;
 
 namespace GestureTimer
 {
+
+    public static class ImageOperations
+    {
+        public static Bitmap ToBitmap(BitmapImage bitmapImage)
+        {
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapImage));
+                enc.Save(outStream);
+                System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
+
+                return new Bitmap(bitmap);
+            }
+        }
+        public static BitmapImage ToBitmapImage(Bitmap bitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+                return bitmapImage;
+            }
+        }
+        public static void ToGrayScale(Bitmap Bmp)
+        {
+            int rgb;
+            System.Drawing.Color c;
+
+            for (int y = 0; y < Bmp.Height; y++)
+                for (int x = 0; x < Bmp.Width; x++)
+                {
+                    c = Bmp.GetPixel(x, y);
+                    rgb = (int)Math.Round(.299 * c.R + .587 * c.G + .114 * c.B);
+                    Bmp.SetPixel(x, y, System.Drawing.Color.FromArgb(rgb, rgb, rgb));
+
+
+                }
+        }
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -27,6 +75,8 @@ namespace GestureTimer
         {
             InitializeComponent();
             pauseButton.Background = new SolidColorBrush(Colors.Red);
+            flipButton.Background = new SolidColorBrush(Colors.Red);
+            bnwButton.Background = new SolidColorBrush(Colors.Red);
             timerPaused = true;
             imageIndex = -1;
 
@@ -37,12 +87,111 @@ namespace GestureTimer
 
         private List<string> imagesPathList = new List<string>();
 
+        public BitmapImage bmi = new BitmapImage();
+        public BitmapImage blackAndWhiteBmi = new BitmapImage();
+
         private int timerGlobalTime = 5 * 60;
         private int timeElapsed = 0;
         private bool timerPaused = true;
         private int imageIndex = -1;
+        private bool bnwOn = false;
+        private bool flipOn = false;
+
+        private void FlipImage()
+        {
+            if(bnwOn)
+            {
+                Bitmap tmpBmp = ImageOperations.ToBitmap(blackAndWhiteBmi);
+                tmpBmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+
+                blackAndWhiteBmi = ImageOperations.ToBitmapImage(tmpBmp);
+
+                image.BeginInit();
+                image.Source = blackAndWhiteBmi;
+                image.EndInit();
+            }
+            else
+            {
+                Bitmap tmpBmp = ImageOperations.ToBitmap(bmi);
+                tmpBmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+
+                bmi = ImageOperations.ToBitmapImage(tmpBmp);
+
+                image.BeginInit();
+                image.Source = bmi;
+                image.EndInit();
+            }
+            
+
+        }
 
 
+
+        private void BlackAndWhiteImage()
+        {
+            if(bnwOn)
+            {
+                Bitmap tmpBmp = ImageOperations.ToBitmap(bmi);
+
+
+                ImageOperations.ToGrayScale(tmpBmp);
+
+                blackAndWhiteBmi = ImageOperations.ToBitmapImage(tmpBmp);
+
+                image.BeginInit();
+                image.Source = blackAndWhiteBmi;
+                image.EndInit();
+            }
+            else
+            {
+                image.BeginInit();
+                image.Source = bmi;
+                image.EndInit();
+            }
+        }
+
+        private void SwitchFlip()
+        {
+            if (flipOn)
+            {
+                flipOn = false;
+                flipButton.Background = new SolidColorBrush(Colors.Red);
+                if (imageIndex >= 0 && imagesPathList.Count > 0)
+                {
+                    FlipImage();
+                }
+            }
+            else
+            {
+                flipOn = true;
+                flipButton.Background = new SolidColorBrush(Colors.Green);
+                if (imageIndex >= 0 && imagesPathList.Count > 0)
+                {
+                    FlipImage();
+                }
+            }
+        }
+        private void SwitchBnw()
+        {
+            if(bnwOn)
+            {
+                bnwOn = false;
+                bnwButton.Background = new SolidColorBrush(Colors.Red);
+                if (imageIndex >= 0 && imagesPathList.Count > 0)
+                {
+                    BlackAndWhiteImage();
+                }
+            }
+            else
+            {
+                bnwOn = true;
+                bnwButton.Background = new SolidColorBrush(Colors.Green);
+                if (imageIndex >= 0 && imagesPathList.Count > 0)
+                {
+                    BlackAndWhiteImage();
+                }
+            }
+        }
 
         private void SetTimerToTime(int seconds)
         {
@@ -110,12 +259,16 @@ namespace GestureTimer
 
             
 
-            if (imagesPathList.Count > 0) imageIndex = 0;
+            if (imagesPathList.Count > 0) imageIndex = -1;
             else return;
 
             imagesPathList = imagesPathList.OrderBy(a => rng.Next()).ToList();
             timerPaused = true;
             pauseButton.Background = new SolidColorBrush(Colors.Red);
+            flipOn = false;
+            flipButton.Background = new SolidColorBrush(Colors.Red);
+            bnwOn = false;
+            bnwButton.Background = new SolidColorBrush(Colors.Red);
             NextImage();
             
 
@@ -141,12 +294,16 @@ namespace GestureTimer
 
             if (imagesPathList.Count > 0)
             {
-                timeElapsed = 0;
-                BitmapImage bmi = new BitmapImage(new Uri(imagesPathList[imageIndex].ToString(), UriKind.Absolute));
+                
+                bmi = new BitmapImage(new Uri(imagesPathList[imageIndex].ToString(), UriKind.Absolute));
+                blackAndWhiteBmi = bmi.Clone();
                 image.BeginInit();
                 image.Source = bmi;
                 image.EndInit();
 
+                if (bnwOn) BlackAndWhiteImage();
+                if (flipOn) FlipImage();
+                timeElapsed = 0;
             }
 
         }
@@ -160,12 +317,16 @@ namespace GestureTimer
 
             if (imagesPathList.Count > 0)
             {
-                timeElapsed = 0;
-                BitmapImage bmi = new BitmapImage(new Uri(imagesPathList[imageIndex].ToString(), UriKind.Absolute));
+                
+                bmi = new BitmapImage(new Uri(imagesPathList[imageIndex].ToString(), UriKind.Absolute));
+                blackAndWhiteBmi = bmi.Clone();
                 image.BeginInit();
                 image.Source = bmi;
                 image.EndInit();
 
+                if (bnwOn) BlackAndWhiteImage();
+                if (flipOn) FlipImage();
+                timeElapsed = 0;
             }
         }
 
@@ -176,8 +337,8 @@ namespace GestureTimer
                 timeElapsed += 1;
                 if(timeElapsed > timerGlobalTime)
                 {
-                    timeElapsed = 0;
                     NextImage();
+                    timeElapsed = 0;
                 }
 
                 int timeLeft = timerGlobalTime - timeElapsed;
@@ -217,6 +378,16 @@ namespace GestureTimer
         private void previousButton_Click(object sender, RoutedEventArgs e)
         {
             PreviousImage();
+        }
+
+        private void flipButton_Click(object sender, RoutedEventArgs e)
+        {
+            SwitchFlip();
+        }
+
+        private void bnwButton_Click(object sender, RoutedEventArgs e)
+        {
+            SwitchBnw();
         }
     }
 }
