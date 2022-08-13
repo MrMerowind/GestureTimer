@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestureTimer", "GestureTimer\GestureTimer.csproj", "{551E04DC-FB03-483E-A414-CE3468E82F22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestureTimer", "GestureTimer\GestureTimer.csproj", "{551E04DC-FB03-483E-A414-CE3468E82F22}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GestureTimerInstaler", "..\..\GestureTimerInstaler\GestureTimerInstaler\GestureTimerInstaler.vdproj", "{65C9AD7C-BFEA-49D7-877B-E819F1599B9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,11 +17,17 @@ Global
 		{551E04DC-FB03-483E-A414-CE3468E82F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{551E04DC-FB03-483E-A414-CE3468E82F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{551E04DC-FB03-483E-A414-CE3468E82F22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C9AD7C-BFEA-49D7-877B-E819F1599B9B}.Debug|Any CPU.ActiveCfg = Debug
+		{65C9AD7C-BFEA-49D7-877B-E819F1599B9B}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB0B8E58-2102-4719-A16F-BEE975F897D2}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 EndGlobal

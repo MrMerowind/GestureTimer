@@ -74,9 +74,9 @@ namespace GestureTimer
         public MainWindow()
         {
             InitializeComponent();
-            pauseButton.Background = new SolidColorBrush(Colors.Red);
-            flipButton.Background = new SolidColorBrush(Colors.Red);
-            bnwButton.Background = new SolidColorBrush(Colors.Red);
+            pauseButton.Background = System.Windows.Media.Brushes.DimGray;
+            flipButton.Background = System.Windows.Media.Brushes.DimGray;
+            bnwButton.Background = System.Windows.Media.Brushes.DimGray;
             timerPaused = true;
             imageIndex = -1;
 
@@ -155,7 +155,7 @@ namespace GestureTimer
             if (flipOn)
             {
                 flipOn = false;
-                flipButton.Background = new SolidColorBrush(Colors.Red);
+                flipButton.Background = System.Windows.Media.Brushes.DimGray;
                 if (imageIndex >= 0 && imagesPathList.Count > 0)
                 {
                     FlipImage();
@@ -164,7 +164,7 @@ namespace GestureTimer
             else
             {
                 flipOn = true;
-                flipButton.Background = new SolidColorBrush(Colors.Green);
+                flipButton.Background = System.Windows.Media.Brushes.Lime;
                 if (imageIndex >= 0 && imagesPathList.Count > 0)
                 {
                     FlipImage();
@@ -176,7 +176,7 @@ namespace GestureTimer
             if(bnwOn)
             {
                 bnwOn = false;
-                bnwButton.Background = new SolidColorBrush(Colors.Red);
+                bnwButton.Background = System.Windows.Media.Brushes.DimGray;
                 if (imageIndex >= 0 && imagesPathList.Count > 0)
                 {
                     BlackAndWhiteImage();
@@ -185,7 +185,7 @@ namespace GestureTimer
             else
             {
                 bnwOn = true;
-                bnwButton.Background = new SolidColorBrush(Colors.Green);
+                bnwButton.Background = System.Windows.Media.Brushes.Lime;
                 if (imageIndex >= 0 && imagesPathList.Count > 0)
                 {
                     BlackAndWhiteImage();
@@ -264,11 +264,11 @@ namespace GestureTimer
 
             imagesPathList = imagesPathList.OrderBy(a => rng.Next()).ToList();
             timerPaused = true;
-            pauseButton.Background = new SolidColorBrush(Colors.Red);
+            pauseButton.Background = System.Windows.Media.Brushes.DimGray;
             flipOn = false;
-            flipButton.Background = new SolidColorBrush(Colors.Red);
+            flipButton.Background = System.Windows.Media.Brushes.DimGray;
             bnwOn = false;
-            bnwButton.Background = new SolidColorBrush(Colors.Red);
+            bnwButton.Background = System.Windows.Media.Brushes.DimGray;
             NextImage();
             
 
@@ -359,12 +359,12 @@ namespace GestureTimer
             if(timerPaused)
             {
                 timerPaused = false;
-                pauseButton.Background = new SolidColorBrush(Colors.Green);
+                pauseButton.Background = System.Windows.Media.Brushes.Lime;
             }
             else
             {
                 timerPaused = true;
-                pauseButton.Background = new SolidColorBrush(Colors.Red);
+                pauseButton.Background = System.Windows.Media.Brushes.DimGray;
             }
             
 
